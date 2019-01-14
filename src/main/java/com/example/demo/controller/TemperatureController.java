@@ -21,10 +21,12 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import com.example.demo.dto.Temperature;
 
+//Our temperature sensor generates only one stream of events without regard to how many clients are listening. However, it also creates them when nobody listens. That may lead to a waste of resources, especially when creation actions are resource hungry. For example, our component may communicate with real hardware and reduce hardware lifespan at the same time.
+// we allocate the thread pool to asynchronously broadcast temperature events. In the case of a genuinely asynchronous and reactive approach (framework), we wouldn't have to do this.
 @Controller
 public class TemperatureController {
 
-	// ResponseBodyEmitter handles async responses.
+/*	// ResponseBodyEmitter handles async responses.
 	// While DeferredResult is used to produce a single result, a
 	// ResponseBodyEmitter can be used to send multiple objects where each object is
 	// written with a compatible HttpMessageConverter.
@@ -91,7 +93,7 @@ public class TemperatureController {
 			}
 		};
 		return new ResponseEntity(body, HttpStatus.OK);
-	}
+	}*/
 	// return emitter;
 
 	private final Set<SseEmitter> clients = new CopyOnWriteArraySet<>();
